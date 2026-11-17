@@ -1,0 +1,7 @@
+{
+  "event_id": "consulta-demo-0001",
+  "name": "Cliente de demostración",
+  "email": "cliente@example.com",
+  "message": "Tengo un gimnasio y me gustaría conocer la demo de predicción de alumnos. ¿Qué información necesitan para comenzar?",
+  "consent": true
+}

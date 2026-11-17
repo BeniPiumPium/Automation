@@ -1,0 +1,16 @@
+{
+  "name": "gympredict-automatizacion-ia",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Entrega final: leads con memoria, propuestas IA, aprobación humana y Gmail en n8n",
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test workflow.test.mjs",
+    "configure": "node build.mjs --config config.local.json --out dist",
+    "demo": "node demo.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

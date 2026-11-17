@@ -1,0 +1,15 @@
+{
+  "business_name": "GymPredict",
+  "airtable_base_id": "",
+  "leads_table": "Solicitudes",
+  "knowledge_table": "Conocimiento",
+  "errors_table": "Incidencias",
+  "review_url": "",
+  "reviewer_email": "",
+  "model": "gpt-4o-mini",
+  "approval_ttl_hours": 24,
+  "poll_seconds": 300,
+  "max_history": 5,
+  "max_knowledge": 20,
+  "max_output_tokens": 1500
+}

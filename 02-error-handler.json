@@ -1,0 +1,112 @@
+{
+  "name": "GymPredict - Respaldo de errores",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "error-inesperado",
+      "name": "Error inesperado",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{json:{\n  \"business_name\": \"GymPredict\",\n  \"airtable_base_id\": \"\",\n  \"leads_table\": \"Solicitudes\",\n  \"knowledge_table\": \"Conocimiento\",\n  \"errors_table\": \"Incidencias\",\n  \"review_url\": \"\",\n  \"reviewer_email\": \"\",\n  \"model\": \"gpt-4o-mini\",\n  \"approval_ttl_hours\": 24,\n  \"poll_seconds\": 300,\n  \"max_history\": 5,\n  \"max_knowledge\": 20,\n  \"max_output_tokens\": 1500\n}}];"
+      },
+      "id": "configuracion",
+      "name": "Configuracion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Error inesperado').first().json;return [{json:{id:String(e.execution?.id||'activation'),workflow:e.workflow?.name||'desconocido',node:e.execution?.lastNodeExecuted||'trigger',reason:'UNEXPECTED_ERROR'}}];"
+      },
+      "id": "resumir-incidente",
+      "name": "Resumir incidente",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        520,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('Configuracion').first().json.reviewer_email }}",
+        "subject": "={{ 'Fallo de automatizacion: ' + $json.workflow }}",
+        "emailType": "text",
+        "message": "={{ 'Ejecución: ' + $json.id + '\\nNodo: ' + $json.node + '\\nRevisar n8n. No reintentar envíos sin comprobar Gmail.' }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "avisar-error-inesperado",
+      "name": "Avisar error inesperado",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        780,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "name": "Gmail - Negocio"
+        }
+      },
+      "onError": "stopWorkflow",
+      "retryOnFail": false
+    }
+  ],
+  "connections": {
+    "Error inesperado": {
+      "main": [
+        [
+          {
+            "node": "Configuracion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuracion": {
+      "main": [
+        [
+          {
+            "node": "Resumir incidente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resumir incidente": {
+      "main": [
+        [
+          {
+            "node": "Avisar error inesperado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all"
+  },
+  "pinData": {},
+  "tags": []
+}
